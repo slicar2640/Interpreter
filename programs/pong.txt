@@ -1,0 +1,162 @@
+start goto @start
+goto @afterStart
+
+@start
+var $width = 500
+var $height = 500
+var $res = 10
+var $w = $width / $res
+var $h = $height / $res
+
+size $width $height
+res $res
+
+var $PI = 3.14159
+
+var $ballX = $w / 2
+var $ballY = $h / 2
+var $ballSpeed = 1
+var $paddleSpeed = 0.75
+
+goto @angle2 if random(2) < 1
+var $angle = random($PI / 2) - ($PI * 0.25)
+@angle2
+var $angle = random($PI / 2) + ($PI * 0.75)
+var $velX = $ballSpeed * cos($angle)
+var $velY = $ballSpeed * sin($angle)
+
+var $lPaddleY = $w / 2
+var $lPaddleX = 5
+var $rPaddleY = $w / 2
+var $rPaddleX = $w - 6
+
+@afterStart
+
+//moving
+goto @moveRPDown if $mouseY < ($rPaddleY - 1)
+$rPaddleY = $rPaddleY + $paddleSpeed
+@moveRPDown
+
+goto @moveRPUp if $mouseY > ($rPaddleY + 1)
+$rPaddleY = $rPaddleY - $paddleSpeed
+@moveRPUp
+
+goto @moveLP if $ballX > ($w / 2)
+goto @moveLPDown if $ballY < ($lPaddleY - 1)
+$lPaddleY = $lPaddleY + $paddleSpeed
+@moveLPDown
+
+goto @moveLPUp if $ballY > ($lPaddleY + 1)
+$lPaddleY = $lPaddleY - $paddleSpeed
+@moveLPUp
+@moveLP
+
+$ballX = $ballX + $velX
+$ballY = $ballY + $velY
+
+goto @skipBounceB if $ballY < ($h - 1)
+$ballY = $h - 1
+$velY = 0 - $velY
+@skipBounceB
+
+goto @skipBounceT if $ballY > 0
+$ballY = 0
+$velY = 0 - $velY
+@skipBounceT
+
+goto @skipPBounceL if (($ballX <= ($lPaddleX + 1)) && (abs($ballY - $lPaddleY) < 4)) == false
+$ballX = $lPaddleX + 1  
+var $angle = random($PI / 2) - ($PI * 0.25)
+$velX = $ballSpeed * cos($angle)
+$velY = $ballSpeed * sin($angle)
+@skipPBounceL
+
+goto @skipPBounceR if (($ballX >= ($rPaddleX - 1)) && (abs($ballY - $rPaddleY) < 4)) == false
+$ballX = $rPaddleX - 1
+var $angle = random($PI / 2) + ($PI * 0.75)
+$velX = $ballSpeed * cos($angle)
+$velY = $ballSpeed * sin($angle)
+@skipPBounceR
+
+goto @skipAddPointR if ($ballX < ($lPaddleX - 1)) == false
+var $ballX = $w / 2
+var $ballY = $h / 2
+
+goto @angle2 if random(2) < 1
+var $angle = random($PI / 2) - ($PI * 0.25)
+@angle2_1
+var $angle = random($PI / 2) + ($PI * 0.75)
+$velX = $ballSpeed * cos($angle)
+$velY = $ballSpeed * sin($angle)
+
+@skipAddPointR
+
+goto @skipAddPointL if ($ballX > ($rPaddleX + 1)) == false
+var $ballX = $w / 2
+var $ballY = $h / 2
+
+goto @angle2 if random(2) < 1
+var $angle = random($PI / 2) - ($PI * 0.25)
+@angle2_2
+var $angle = random($PI / 2) + ($PI * 0.75)
+$velX = $ballSpeed * cos($angle)
+$velY = $ballSpeed * sin($angle)
+
+@skipAddPointL
+
+//drawing
+clear
+
+var $y = 0
+@startMiddleLoop
+
+var $index = (($w / 2) + ($y * $w)) * 3
+var $idx1 = $index
+var $idx2 = $index + 1
+var $idx3 = $index + 2
+
+set $idx1 100
+set $idx2 100
+set $idx3 100
+
+$y = $y + 2
+goto @startMiddleLoop if $y < $h
+
+var $index = (floor($ballX) + (floor($ballY) * $w)) * 3
+var $idx1 = $index
+var $idx2 = $index + 1
+var $idx3 = $index + 2
+
+set $idx1 255
+set $idx2 255
+set $idx3 255
+
+var $y = floor($lPaddleY) - 4
+@startLPLoop
+
+var $index = (5 + ($y * $w)) * 3
+var $idx1 = $index
+var $idx2 = $index + 1
+var $idx3 = $index + 2
+
+set $idx1 255
+set $idx2 255
+set $idx3 255
+
+$y = $y + 1
+goto @startLPLoop if $y < ($lPaddleY + 4)
+
+var $y = floor($rPaddleY) - 4
+@startRPLoop
+
+var $index = (($w - 6) + ($y * $w)) * 3
+var $idx1 = $index
+var $idx2 = $index + 1
+var $idx3 = $index + 2
+
+set $idx1 255
+set $idx2 255
+set $idx3 255
+
+$y = $y + 1
+goto @startRPLoop if $y < ($rPaddleY + 4)

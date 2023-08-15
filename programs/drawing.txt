@@ -1,0 +1,31 @@
+start var $width = 500
+start var $height = 500
+start var $res = 5
+
+start size $width $height
+start res $res
+
+start var $brushX = 1
+start var $brushY = 1
+start var $frame = 0
+
+//onclick clear
+
+var $w = $width / $res
+var $h = $height / $res
+
+var $step1 = $brushY * $w
+var $step2 = $brushX + $step1
+var $step3 = $step2 * 3
+var $idx1 = $step3
+var $idx2 = $step3 + 1
+var $idx3 = $step3 + 2
+
+onclick set $idx1 255
+onclick set $idx2 255
+onclick set $idx3 255
+
+$brushX = $mouseX
+$brushY = $mouseY
+
+$frame = $frame + 1
