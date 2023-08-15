@@ -1,0 +1,48 @@
+commands:
+
+// comment
+
+@label
+    marks a label for goto commands
+
+res <resolution>
+    sets screen resolution
+
+size <sizeX> <sizeY>
+    sets screen size
+    
+print <msg>
+    prints to console
+
+var <$variable> = <value>
+    assigns a value to a variable
+
+set <position> <value>
+    sets <value> at <position>
+
+get <position> <$variable>
+    sets variable value to the value at <position>
+
+halt
+    halts the program. If not called, the program will loop
+
+goto <lineNum | @lineTag>
+    moves pointer to specified position
+
+goto <lineNum | @lineTag> if <condition>
+    moves pointer to specified position if condition evaluates to true
+
+clear
+    clears pixels array
+
+$variable = <value>
+    set variable
+
+
+modifiers:
+
+onclick <command>
+    runs command when mouse is pressed
+
+start <command>
+    runs command only on first frame
